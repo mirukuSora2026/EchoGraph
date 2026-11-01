@@ -1,0 +1,39 @@
+# EchoGraph runtime dependencies (initial specification, not a tested lock file).
+# Validate Python/platform compatibility, then lock tested versions.
+
+# API and configuration
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic
+orjson
+httpx
+# Interprets the requested "python-env" as .env configuration loading.
+python-dotenv
+
+# Models and local natural-language analysis
+# Select torch/torchaudio versions from the official compatibility matrix.
+torch
+torchaudio
+transformers
+safetensors
+accelerate
+# Python client; Ollama runtime and model weights are separate prerequisites.
+ollama
+
+# Audio, numerical analysis, and visualization
+numpy
+scipy
+pandas
+scikit-learn
+matplotlib
+librosa
+soundfile
+tqdm
+
+# Database: use Python's sqlite3 module; no "sqlite" pip package is required.
+# Audio decoding: FFmpeg is a separate system prerequisite.
+# Use soundfile/librosa/FFmpeg for input; torchaudio.load/save may need TorchCodec.
+
+# Development and validation
+pytest
