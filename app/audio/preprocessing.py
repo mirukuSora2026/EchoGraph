@@ -8,7 +8,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
-from mpmath import isint
 from numpy.typing import NDArray
 
 class AudioPreprocessingError(RuntimeError):
@@ -45,6 +44,11 @@ class AudioSegment:
         return (
             self.end_sample - self.start_sample
         ) / self.sample_rate
+
+    @property
+    def end_seconds(self) -> float:
+        """구간 끝 시간을 초 단위로 반환"""
+        return self.end_sample / self.sample_rate
 
 def _positive_seconds(value: int | float, name: str) -> float:
     """시간 인자가 유한한 양수인지 확인"""
@@ -142,10 +146,12 @@ def load_audio(
     samples = np.frombuffer(result.stdout, dtype="<f4")
 
     if samples.size == 0:
+        raise AudioPreprocessingError("오디오에 분석할 샘플이 없습니다.")
+
+    if not np.isfinite(samples).all():
         raise AudioPreprocessingError(
             "오디오에 NaN 또는 무한대 값이 있습니다."
         )
-
     return AudioData(
         source=source,
         sample_rate=sample_rate,
